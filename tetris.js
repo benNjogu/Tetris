@@ -35,6 +35,36 @@ function drawBoard() {
 
 drawBoard();
 
+//The pieces and their colors
+const PIECES = [[Z, "red"], [S, "green"], [T, "yellow"], [O, "blue"], [L, "purple"], [I, "cyan"], [J, "orange"]];
 
+//Initiate the piece
+let p = new Piece(PIECES[0][0], PIECES[0][1]);
 
+//The object piece
+function Piece(tetromino, color){
+    this.tetromino = tetromino;
+    this.color = color;
+
+    this.tetrominoN = 0;//We start from the first pattern
+    this.activeTetromino = this.tetromino[this.tetrominoN];
+
+    //we need to control the pieces
+    this.x = 2;
+    this.y = 4;
+}
+
+//draw a piece to the board
+Piece.prototype.draw = function(){
+    for (let r = 0; r < this.activeTetromino.length; r++) {
+      for (let c = 0; c < this.activeTetromino.length; c++) {
+        //we draw only occupied squares
+        if(this.activeTetromino[r][c]){
+            drawSquare(this.x + c, this.y + r, this.color)
+        }
+      }
+    }
+}
+
+p.draw();
 
