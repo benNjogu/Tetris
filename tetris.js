@@ -66,5 +66,24 @@ Piece.prototype.draw = function(){
     }
 }
 
-p.draw();
+//Move down the piece
+Piece.prototype.moveDown = function(){
+    this.y++;
+    this.draw();
+}
+
+//draw the piece every one second
+let dropStart = Date.now();
+
+function drop(){
+    let now = Date.now();
+    let delta = now - dropStart;
+    if(delta > 1000){
+        p.moveDown();
+        dropStart = Date.now();
+    }
+    requestAnimationFrame(drop);
+}
+
+drop();
 
