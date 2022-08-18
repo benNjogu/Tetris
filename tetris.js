@@ -167,8 +167,31 @@ Piece.prototype.lock = function () {
     }
   }
 
+  //remove full rows
+  for (let r = 0; r < ROW; r++) {
+    let isRowFull = true;
+    for (let c = 0; c < COL; c++) {
+      isRowFull = isRowFull && board[r][c] != VACANT;
+    }
+    if (isRowFull) {
+      //if the row is full
+      //we move down all the rows above it
+      for (let y = r; y > 1; y--) {
+        for (let c = 0; c < COL; c++) {
+          board[y][c] = board[y - 1][c];
+        }
+      }
+      //top row has no row above it
+      for (let c = 0; r < COL; c++) {
+        board[0][c] = VACANT;
+      }
+      //Increment the score
+      score += 10;
+    }
+  }
+
   //update the board
-  // drawBoard();
+  drawBoard();
 };
 
 //collision function
