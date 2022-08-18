@@ -36,28 +36,36 @@ function drawBoard() {
 drawBoard();
 
 //The pieces and their colors
-const PIECES = [[Z, "red"], [S, "green"], [T, "yellow"], [O, "blue"], [L, "purple"], [I, "cyan"], [J, "orange"]];
+const PIECES = [
+  [Z, "red"],
+  [S, "green"],
+  [T, "yellow"],
+  [O, "blue"],
+  [L, "purple"],
+  [I, "cyan"],
+  [J, "orange"],
+];
 
 //generate random pieces
-function randomPiece(){
-    let r = randomN = Math.floor(Math.random() * PIECES.length); //returns numbers btn 0 and 6
-    return new Piece(PIECES[r][0], PIECES[r][1]);
+function randomPiece() {
+  let r = (randomN = Math.floor(Math.random() * PIECES.length)); //returns numbers btn 0 and 6
+  return new Piece(PIECES[r][0], PIECES[r][1]);
 }
 
 //Instantiate the piece
 let p = randomPiece();
 
 //The object piece
-function Piece(tetromino, color){
-    this.tetromino = tetromino;
-    this.color = color;
+function Piece(tetromino, color) {
+  this.tetromino = tetromino;
+  this.color = color;
 
-    this.tetrominoN = 0;//We start from the first pattern
-    this.activeTetromino = this.tetromino[this.tetrominoN];
+  this.tetrominoN = 0; //We start from the first pattern
+  this.activeTetromino = this.tetromino[this.tetrominoN];
 
-    //we need to control the pieces
-    this.x = 2;
-    this.y = 4;
+  //we need to control the pieces
+  this.x = 2;
+  this.y = 4;
 }
 
 //fill function
@@ -73,9 +81,9 @@ Piece.prototype.fill = function (color) {
 };
 
 //draw a piece to the board
-Piece.prototype.draw = function(){
-    this.fill(this.color);
-}
+Piece.prototype.draw = function () {
+  this.fill(this.color);
+};
 
 //Undraw a piece
 Piece.prototype.unDraw = function () {
@@ -137,6 +145,24 @@ Piece.prototype.rotate = function () {
   }
 };
 
+//lock the pieces to the bottom
+Piece.prototype.lock = function () {
+  for (let r = 0; r < this.activeTetromino.length; r++) {
+    for (let c = 0; c < this.activeTetromino.length; c++) {
+      //we skip the vacant squares
+      if (this.activeTetromino[r][c]) {
+        continue;
+      }
+      //pieces to lock on game = gameover
+      if (this.y + r < 0) {
+        alert("Game Over");
+        gameOver = true;
+        break;
+      }
+    }
+  }
+};
+
 //collision function
 Piece.prototype.collision = function (x, y, piece) {
   for (let r = 0; r < piece.length; r++) {
@@ -187,16 +213,18 @@ function CONTROL(event) {
 
 //draw the piece every one second
 let dropStart = Date.now();
+let gameOver = false;
 
-function drop(){
-    let now = Date.now();
-    let delta = now - dropStart;
-    if(delta > 1000){
-        p.moveDown();
-        dropStart = Date.now();
-    }
+function drop() {
+  let now = Date.now();
+  let delta = now - dropStart;
+  if (delta > 1000) {
+    p.moveDown();
+    dropStart = Date.now();
+  }
+  if (!gameOver) {
     requestAnimationFrame(drop);
+  }
 }
 
 drop();
-
