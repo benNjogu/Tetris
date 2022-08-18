@@ -38,10 +38,14 @@ drawBoard();
 //The pieces and their colors
 const PIECES = [[Z, "red"], [S, "green"], [T, "yellow"], [O, "blue"], [L, "purple"], [I, "cyan"], [J, "orange"]];
 
-
+//generate random pieces
+function randomPiece(){
+    let r = randomN = Math.floor(Math.random() * PIECES.length); //returns numbers btn 0 and 6
+    return new Piece(PIECES[r][0], PIECES[r][1]);
+}
 
 //Instantiate the piece
-let p = new Piece(PIECES[0][0], PIECES[0][1]);
+let p = randomPiece();
 
 //The object piece
 function Piece(tetromino, color){
@@ -86,6 +90,7 @@ Piece.prototype.moveDown = function () {
     this.draw();
   } else {
     //lock the piece and generate a new one
+    p = randomPiece();
   }
 };
 
@@ -142,7 +147,7 @@ Piece.prototype.collision = function (x, y, piece) {
       }
       //coordinate of the piece after the movement
       let newX = this.x + c + x;
-      let newY = this.x + r + y;
+      let newY = this.y + r + y;
       //Conditions
       if (newX < 0 || newX >= COL || newY >= ROW) {
         return true;
